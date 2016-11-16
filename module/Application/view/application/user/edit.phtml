@@ -1,3 +1,4 @@
+<h1><?=$this->translate('__user_edition')?></h1>
 <?php
 $form = $this->form;
 $form->prepare();
@@ -33,6 +34,22 @@ echo $this->form()->openTag($form);
         <div class="controls">
             <?= $this->formElement($form->get('password')); ?>
             <span class="help-block errors"><?= $this->formElementErrors($form->get('password')); ?></span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <?= $this->formLabel($form->get('address')); ?>
+        <div class="controls">
+            <?= $this->formElement($form->get('address')); ?>
+            <span class="help-block errors"><?= $this->formElementErrors($form->get('address')); ?></span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <?= $this->formLabel($form->get('birthdate')); ?>
+        <div class="controls">
+            <?= $this->formDateSelect($form->get('birthdate'), IntlDateFormatter::LONG, 'fr_FR'); ?>
+            <span class="help-block errors"><?= $this->formElementErrors($form->get('birthdate')); ?></span>
         </div>
     </div>
 

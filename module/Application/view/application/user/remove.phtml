@@ -1,0 +1,15 @@
+<h1>Suppression d'un utlisateur</h1>
+
+<p>Etes-vous sûr de vouloir supprimer l'utilisateur :
+   <?php echo $users->getFirstname().' '.$users->getLastname(); ?>
+</p>
+
+<?php
+$url = $this->url('users/remove', array('user_id'=>$users->getId())); ?>
+<form action="<?php echo $url; ?>" method="post">
+    <div>
+        <input type="hidden" name="id" value="<?php echo (int)$users->getId(); ?>" />
+        <input type="submit" name="delete" value="Oui"/>
+        <input type="submit" name="delete" value="Non"/>
+    </div>
+</form>

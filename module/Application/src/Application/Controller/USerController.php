@@ -11,15 +11,18 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 class UserController extends AbstractActionController
 {
     public function listAction()
     {
-
+        $champ = $this->params()->fromRoute('tri_champ');
+        $order = $this->params()->fromRoute('tri_order');
+        
         $users = $this->getServiceLocator()->get('entity_manager')
             ->getRepository('Application\Entity\User')
-            ->findAll();
+            ->myFindAll($champ, $order);
 
         return new ViewModel(array(
             'users' =>  $users
@@ -61,8 +64,28 @@ class UserController extends AbstractActionController
     public function removeAction()
     {
         //To do : Do Remove User
-
-        $this->redirect()->toRoute('users');
+        $userToRemove = $this->getServiceLocator()->get('entity_manager')
+            ->getRepository('Application\Entity\User')
+            ->find($this->params()->fromRoute('user_id'));
+    
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost();
+            if ('Oui' == $data['delete']) {
+                /* @var $serviceUser \Application\Service\UserService */
+                $serviceUser = $this->getServiceLocator()->get('application.service.user');
+                //On vérifie que l'id passé dans le formulaire est bien celui de l'utilisateur à supprimer
+                if($data['id'] == $userToRemove->getId()){
+                    $this->flashMessenger()->addSuccessMessage('Suppression réussie !');
+                    $serviceUser->removeUser($userToRemove);
+                }
+            }
+            $this->redirect()->toRoute('users');
+        }
+        
+        return new ViewModel(array(
+            'users'  =>  $userToRemove
+        ));
+    
     }
 
     public function editAction()
@@ -76,6 +99,9 @@ class UserController extends AbstractActionController
 
         $form->bind($userToEdit);
         $form->get('firstname')->setValue($userToEdit->getFirstname());
+        $form->get('lastname')->setValue($userToEdit->getLastname());
+        $form->get('address')->setValue($userToEdit->getAddress());
+        $form->get('birthdate')->setValue($userToEdit->getBirthdate());
 
         $data = $this->prg();
 
@@ -91,6 +117,9 @@ class UserController extends AbstractActionController
                 $user = $form->getData();
 
                 //Save the user
+                /* @var $serviceUser \Application\Service\UserService */
+                $serviceUser = $this->getServiceLocator()->get('application.service.user');
+                $serviceUser->saveUser($user);
 
                 $this->redirect()->toRoute('users');
             }

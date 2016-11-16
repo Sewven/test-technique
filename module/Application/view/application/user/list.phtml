@@ -1,3 +1,14 @@
+<?php if ($this->flashMessenger()->hasSuccessMessages()):?>
+    <div class="alert alert-success">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <?php $messages = $this->flashMessenger()->getSuccessMessages();
+            foreach($messages as $message) {
+                echo $message;
+            }
+        ?>
+    </div>
+<?php endif; ?>
+
 <a href="<?=$this->url('users/add')?>" class='btn btn-primary'>
     <?=$this->translate('__add_user')?>
 </a>
@@ -5,20 +16,34 @@
 <br/>
 <br/>
 
-<table>
+<table class='table tablesorter' id="table-user">
     <thead>
         <tr>
             <th>
                 <?=$this->translate('__user_id')?>
+                <?php echo $this->partial('order.phtml',array('champ'=>'id'));?>
+<!--     TEST           <a href="<?= $this->url('users/tri', array('tri_champ' => 'id', 'tri_order' => 'ASC')) ?>" ><span class="glyphicon glyphicon-chevron-down"></span></a>
+                <a href="<?= $this->url('users/tri', array('tri_champ' => 'id', 'tri_order' => 'DESC')) ?>" ><span class="glyphicon glyphicon-chevron-up"></span></a>-->
             </th>
             <th>
                 <?=$this->translate('__user_firstname')?>
+                <?php echo $this->partial('order.phtml',array('champ'=>'firstName'));?>
             </th>
             <th>
                 <?=$this->translate('__user_lastname')?>
+                <?php echo $this->partial('order.phtml',array('champ'=>'lastName'));?>
             </th>
             <th>
                 <?=$this->translate('__user_email')?>
+                <?php echo $this->partial('order.phtml',array('champ'=>'email'));?>
+            </th>
+            <th>
+                <?=$this->translate('__user_birthdate')?>
+                <?php echo $this->partial('order.phtml',array('champ'=>'birthdate'));?>
+            </th>
+            <th>
+                <?=$this->translate('__user_address')?>
+                <?php echo $this->partial('order.phtml',array('champ'=>'address'));?>
             </th>
             <th></th>
         </tr>
@@ -43,6 +68,12 @@
             <a href='mailto:<?=$user['email']?>'>
                 <?=$user['email']?>
             </a>
+        </td>
+        <td>
+            <?=$user['profile']['birthdate']?>
+        </td>
+        <td>
+            <?=$user['profile']['address']?>
         </td>
         <td>
             <a href="<?=$this->url('users/edit', array('user_id'   =>  $user['id']))?>" class="btn btn-success">

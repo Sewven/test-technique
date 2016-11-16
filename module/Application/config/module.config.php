@@ -90,6 +90,15 @@ return array(
                             ),
                         ),
                     ),
+                    'tri' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/tri/:tri_champ/:tri_order',
+                            'defaults' => array(
+                                'action'    =>  'list'
+                            ),
+                        ),
+                    ),
                 ),
             )
         ),
